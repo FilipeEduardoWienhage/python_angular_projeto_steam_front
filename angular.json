@@ -29,9 +29,9 @@
             "styles": [
               "node_modules/primeng/resources/themes/lara-dark-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "src/styles.css",
               "node_modules/primeicons/primeicons.css",
-              "node_modules/primeflex/primeflex.css"
+              "node_modules/primeflex/primeflex.css",
+              "src/styles.css"
             ],
             "scripts": []
           },
@@ -40,8 +40,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "3MB",
+                  "maximumError": "4MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -98,6 +98,6 @@
     }
   },
   "cli": {
-    "analytics": "45f13015-7464-45c6-99d5-2b38c8f2afc4"
+    "analytics": "cff51362-c78e-466b-a680-678d514d7228"
   }
 }

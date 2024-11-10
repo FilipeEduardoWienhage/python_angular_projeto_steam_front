@@ -8,6 +8,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { PasswordModule } from 'primeng/password';
 import { ToastModule } from 'primeng/toast';
+import { ClienteCadastro } from '../../models/cliente-cadastro';
+import { ClienteService } from '../../services/cliente.service';
+import { Router } from '@angular/router';
 
 interface Endereco{
   uf: string,
@@ -43,29 +46,48 @@ export class CadastroUsuarioComponent {
   cidade: string = "";
   bairro: string = "";
   logradouro: string = "";
+  usuario: string = "";
 
-  constructor(private httpClient: HttpClient, private messageService: MessageService){
+  constructor(private httpClient: HttpClient, private messageService: MessageService, private clienteService: ClienteService, private router: Router){
   }
 
   buscarEndereco(){
-    let cep = this.cep.replace("-", "").replace(".", "").replace("_", "")
+    let cep = this.cep.replace("-", "").replace("_", "").replace(".", "")
 
-    if (cep.length !=8){
+    if (cep.length != 8){
       this.messageService.clear();
       this.messageService.add({summary: "CEP inválido", severity: "error"})
       return;
     }
-
     this.httpClient.get<Endereco>(`https://viacep.com.br/ws/${cep}/json/`)
-    .subscribe(res => {
-      this.estado = res.uf;
-      this.cidade = res.localidade;
-      this.logradouro = res.logradouro;
-      this.bairro = res.bairro;
-    })
+      .subscribe(res => {
+        this.estado = res.uf;
+        this.cidade = res.localidade;
+        this.logradouro = res.logradouro;
+        this.bairro = res.bairro;
+      })
   }
 
   cadastrar(){
-    this.buscarEndereco();
+    let clienteCadastro = new ClienteCadastro();
+    clienteCadastro.nome = this.nome;
+    clienteCadastro.cep = this.cep;
+    clienteCadastro.cpf = this.cpf;
+    clienteCadastro.dataNascimento = this.dataNascimento.toISOString().slice(0, 10);
+    clienteCadastro.email = this.email;
+    clienteCadastro.senha = this.senha;
+    clienteCadastro.username = this.usuario;
+
+    this.clienteService.cadastrar(clienteCadastro).subscribe({
+      next: dado => {
+        console.log(dado);
+        alert("Cliente cadastrado com sucesso")
+      }, 
+      error: erro => {
+        console.error(erro);
+        alert("Não foi possivel cadastrar o cliente");
+        this.router.navigate(["login"])
+      }
+    })
   }
 }
